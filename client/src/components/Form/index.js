@@ -1,24 +1,20 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StateContext } from '../Contexts/StateContext';
-import { useDispatch, useSelector } from 'react-redux';
-import { createNote, updateNote } from '../../actions/notes';
+import { NoteContext } from '../../Contexts/NoteContext';
+
 import { Typography, Button, TextField, Paper } from '@material-ui/core';
 import useStyles from './styles';
 
 const Form = () => {
-	const { currentId, setCurrentId } = useContext(StateContext);
+	const { currentId, setCurrentId, dispatch, createNote, updateNote, notes } =
+		useContext(NoteContext);
+
 	const [noteData, setNoteData] = useState({
 		title: '',
 		body: '',
 	});
 
-	//Dispatches action
-	const dispatch = useDispatch();
-
 	//Gathers state from index
-	const note = useSelector((state) =>
-		currentId ? state.notes.find((note) => note._id === currentId) : null
-	);
+	const note = currentId ? notes.find((note) => note._id === currentId) : null;
 	const classes = useStyles();
 
 	useEffect(() => {
@@ -28,11 +24,13 @@ const Form = () => {
 	// handles submit, to create and updates notes
 	const handleSubmit = (e) => {
 		e.preventDefault();
+
 		if (currentId) {
 			dispatch(updateNote(currentId, noteData));
 		} else {
 			dispatch(createNote(noteData));
 		}
+
 		clear();
 	};
 	// reverts form to empty string once submitted or cleared

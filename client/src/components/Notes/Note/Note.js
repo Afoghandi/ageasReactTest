@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+
 import {
 	Card,
 	CardActions,
@@ -14,13 +14,13 @@ import moment from 'moment';
 
 import useStyles from './styles';
 
-import { deletePost } from '../../../actions/notes';
-import { StateContext } from '../../Contexts/StateContext';
+import { NoteContext } from '../../../Contexts/NoteContext';
 
 const Note = ({ note }) => {
 	// gets states from context
-	const { setCurrentId, setAlert } = useContext(StateContext);
-	const dispatch = useDispatch();
+	const { setCurrentId, deletePost, dispatch, setAlert } =
+		useContext(NoteContext);
+
 	const classes = useStyles();
 
 	const { createdAt, _id, title, body, updatedAt } = note;
@@ -28,28 +28,28 @@ const Note = ({ note }) => {
 	// Deletes  notes and alerts action completed
 	const handleDelete = () => {
 		dispatch(deletePost(_id));
-
 		setAlert(true);
 	};
+	//Set timer to remove alert
 	//Set timer to remove alert
 	useEffect(() => {
 		setTimeout(() => {
 			setAlert(false);
 		}, 3000);
 	}, [setAlert]);
-
 	return (
 		<Card className={classes.card}>
 			<CardMedia className={classes.media} />{' '}
 			<div className={classes.overlay}>
 				<Typography variant='h6'> Created On: </Typography>{' '}
 				<Typography variant='body2'>
-					{moment({ createdAt }).format('MMM Do YY')}
+					{' '}
+					{moment({ createdAt }).format('MMM Do YY')}{' '}
 				</Typography>{' '}
 			</div>{' '}
 			<div className={classes.overlay2}>
 				<Button style={{ color: 'white' }} size='small'>
-					<MoreHorizIcon fontSize='medium' onClick={() => setCurrentId(_id)} />{' '}
+					<MoreHorizIcon fontSize='medium' />{' '}
 				</Button>{' '}
 			</div>{' '}
 			<div className={classes.title}>
